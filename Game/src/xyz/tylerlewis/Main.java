@@ -1,18 +1,38 @@
 package xyz.tylerlewis;
 
 import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.image.BufferStrategy;
+
+import javax.swing.JFrame;
 
 public class Main extends Canvas implements Runnable {
 	private boolean running = false;
 	private Thread gameThread;
 	private final String TITLE = "Game";
+	public JFrame frame;
+	private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	private int width = 300;
+	private int height = width / 16 * 9;
+	private double scale = (screenSize.getHeight() / height);
+	
 	
 	public Main() {
+		Dimension windowSize = new Dimension((int)(width * scale), (int)(height * scale)); 
+		setPreferredSize(windowSize);
+		frame = new JFrame(TITLE);
+		frame.setSize(windowSize);
+		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.add(this);
+		frame.pack();
+		frame.setVisible(true);
 		start();
 	}
-	
-	
-	
 	
 	private synchronized void start() {
 		running = true;
@@ -56,6 +76,18 @@ public class Main extends Canvas implements Runnable {
 	}
 	
 	public void render() {
+		BufferStrategy bs = getBufferStrategy();
+		if(bs == null) {
+			createBufferStrategy(3);
+			return;
+		}
+		Graphics g = bs.getDrawGraphics();
+		//draw here
+		g.setColor(Color.blue);
+		g.fillRect(0, 0, (int)(width*scale), (int)(height*scale));
+		//----------
+		g.dispose();
+		bs.show();
 		
 	}
 	public void tick() {
