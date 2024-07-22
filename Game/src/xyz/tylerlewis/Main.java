@@ -1,14 +1,16 @@
 package xyz.tylerlewis;
 
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import xyz.tylerlewis.gfx.Render;
 import xyz.tylerlewis.gfx.SpriteSheet;
 import xyz.tylerlewis.io.KeyInput;
 
@@ -22,10 +24,18 @@ public class Main extends Canvas implements Runnable {
 	private int height = width / 16 * 9;
 	private double scale = (screenSize.getHeight() / height);
 	public KeyInput input;
+	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+	private int[] pixles = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+	private Render render;
+	public int x = 0;
+	public int y = 0;
+	
 	SpriteSheet test =  new SpriteSheet("/TestSheet.png");
+	
 	public Main() {
 		frame = new JFrame(TITLE);
 		input = new KeyInput();
+		render = new Render(width, height);
 		start();
 	}
 	
@@ -88,13 +98,12 @@ public class Main extends Canvas implements Runnable {
 			return;
 		}
 		Graphics g = bs.getDrawGraphics();
-		//draw here
-		if(input.up) {
-			g.setColor(Color.blue);	
-		}else {
-			g.setColor(Color.black);
+		render.render(x, y);
+		for(int i = 0; i < pixles.length; i++) {
+			pixles[i] = render.pixles[i];
 		}
-		g.fillRect(0, 0, (int)(width*scale), (int)(height*scale));
+		//draw here
+		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 		//----------
 		g.dispose();
 		bs.show();
@@ -102,6 +111,10 @@ public class Main extends Canvas implements Runnable {
 	}
 	public void tick() {
 		input.tick();
+		if(input.up) y--;
+		if(input.down) y++;
+		if(input.left) x++;
+		if(input.right) x--;
 	}
 
 	public static void main(String [] args) {

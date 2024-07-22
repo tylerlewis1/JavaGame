@@ -5,8 +5,6 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 public class SpriteSheet {
-
-	
 	
 	public String path;
 	public int width, height;
@@ -23,10 +21,6 @@ public class SpriteSheet {
 		this.width = sheet.getWidth();
 		this.height = sheet.getHeight();
 		pixles = sheet.getRGB(0, 0, width, height, null, 0, width);
-		for(int i = 0; i < pixles.length; i++) {
-			if(pixles[i] != -1) {
-				System.out.println(pixles[i]);
-			}
-		}	
+		
 	}	
 }
