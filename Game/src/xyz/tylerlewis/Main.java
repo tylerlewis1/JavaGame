@@ -9,6 +9,7 @@ import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
+import xyz.tylerlewis.gfx.SpriteSheet;
 import xyz.tylerlewis.io.KeyInput;
 
 public class Main extends Canvas implements Runnable {
@@ -21,7 +22,7 @@ public class Main extends Canvas implements Runnable {
 	private int height = width / 16 * 9;
 	private double scale = (screenSize.getHeight() / height);
 	public KeyInput input;
-	
+	SpriteSheet test =  new SpriteSheet("/TestSheet.png");
 	public Main() {
 		frame = new JFrame(TITLE);
 		input = new KeyInput();
