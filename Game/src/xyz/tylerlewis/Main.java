@@ -9,6 +9,8 @@ import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
+import xyz.tylerlewis.io.KeyInput;
+
 public class Main extends Canvas implements Runnable {
 	private boolean running = false;
 	private Thread gameThread;
@@ -18,12 +20,19 @@ public class Main extends Canvas implements Runnable {
 	private int width = 300;
 	private int height = width / 16 * 9;
 	private double scale = (screenSize.getHeight() / height);
-	
+	public KeyInput input;
 	
 	public Main() {
+		frame = new JFrame(TITLE);
+		input = new KeyInput();
+		start();
+	}
+	
+	private synchronized void start() {
+		running = true;
 		Dimension windowSize = new Dimension((int)(width * scale), (int)(height * scale)); 
 		setPreferredSize(windowSize);
-		frame = new JFrame(TITLE);
+		addKeyListener(input);
 		frame.setSize(windowSize);
 		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
@@ -31,11 +40,7 @@ public class Main extends Canvas implements Runnable {
 		frame.add(this);
 		frame.pack();
 		frame.setVisible(true);
-		start();
-	}
-	
-	private synchronized void start() {
-		running = true;
+		
 		gameThread = new Thread(this, TITLE);
 		gameThread.start();
 	}
@@ -83,7 +88,11 @@ public class Main extends Canvas implements Runnable {
 		}
 		Graphics g = bs.getDrawGraphics();
 		//draw here
-		g.setColor(Color.blue);
+		if(input.up) {
+			g.setColor(Color.blue);	
+		}else {
+			g.setColor(Color.black);
+		}
 		g.fillRect(0, 0, (int)(width*scale), (int)(height*scale));
 		//----------
 		g.dispose();
@@ -91,7 +100,7 @@ public class Main extends Canvas implements Runnable {
 		
 	}
 	public void tick() {
-		
+		input.tick();
 	}
 
 	public static void main(String [] args) {
